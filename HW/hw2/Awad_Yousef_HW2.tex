@@ -1,0 +1,131 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usetikzlibrary{automata,positioning}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{Yousef Alaa Awad}
+\chead{\hmwkClass\: \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+
+\newcommand{\hmwkTitle}{Homework\ \#2}
+\newcommand{\hmwkClass}{Computer Architecture, Section 379}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}
+    \vspace{3in}
+}
+
+\author{Yousef Alaa Awad}
+
+% Problems start here
+\begin{document}
+
+\maketitle
+\pagebreak
+
+\section{1}
+\textbf{Given:} Assume we have a 64KB 8-way associative cache with 32B blocks
+
+\subsection{A) What is the set number we are accessing for virtual address 0x08B56A?}
+
+
+\subsection{B) Wgat is the set number and the tag if the for virtual access in part a if cache is 2-way associative?}
+
+\subsection{C) Repeat Part B for direct mapped cache.}
+
+\subsection{D) What is the effect -- between Part A to Part C -- (i.e. when reducing associativity) on the following metrics: miss rate, and hit time.}
+
+
+\section{2}
+\textbf{Given:} Assume page table and a 64-bit processor with 4KB pages. The page table root address is at address 0xFF2400, and each page tabe entry (PTE) is 8 bytes.
+
+\subsection{A) What is the size of the hypothetical linear page table?}
+
+\subsection{B) If four-levels page table is used, what are the indices of the corresponding PGD, PUD, PMD, and PTE when accessing 00x0542354C1508?}
+
+\section{3}
+\textbf{Given:} Consider a memory system with the following paramaters:
+\begin{itemize}
+	\item Translation Lookaside Buffer has 512 entries and is 2-way set associative.
+	\item 64KByte L1 Data Cache has 128 byte lines and is also 2-way set associative.
+	\item Virtual addresses are 64 bits and physical addresses are 32 bits.
+	\item 4KB page size.
+\end{itemize}
+
+
+\includegraphics[width=\textwidth]{evidence.png}
+\newpage
+\lstinputlisting[
+	caption=My C Code,
+	label={lst:listing-cpp},
+	language=C++,
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	keepspaces=true,                 
+	numbers=left,       
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2,
+]{main.c}
+\newpage
+
+\end{document}
