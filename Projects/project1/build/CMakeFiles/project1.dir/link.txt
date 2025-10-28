@@ -1,0 +1,1 @@
+/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ -Wl,--dependency-file=CMakeFiles/project1.dir/link.d CMakeFiles/project1.dir/src/main.cpp.o -o project1
