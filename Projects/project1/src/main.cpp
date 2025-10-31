@@ -10,13 +10,14 @@
  */
 #include <fstream>
 #include <iostream>
+#include <cstring>
 
 // The following are set by the command line
 struct cli_defines {
   int CACHE_SIZE;
   int NUM_SETS;
   int ASSOC;
-  int BLOCK_SIZE = 64;
+  int BLOCK_SIZE = 64;    // 64 byte block size is default
   int REPLACEMENT_POLICY; // 0 = LRU, 1 = FIFO
   int WRITE_POLICY;       // 0 = write-through, 1 = write-back
 };
@@ -271,11 +272,27 @@ void simulate_access(char opcode, long long int add, unsigned int* hit, unsigned
 
 int main(int argc, char *argv[])
 {
+
+  if (argc > 1 && !std::strcmp(argv[1], "--help"))
+  {
+    std::cout << "General Usage: ./SIM <CACHE_SIZE> <ASSOC> <REPLACEMENT> <WB> <TRACE_FILE>" << std::endl;
+    std::cout << "Meaning of each term:" << std::endl;
+    std::cout << " <CACHE_SIZE>: Size of the total cache in the 'CPU', in Bytes (32KB is 32768)" << std::endl;
+    std::cout << "      <ASSOC>: The associativity of the cache setup (8-way is 8)" << std::endl;
+    std::cout << "<REPLACEMENT>: The replacement policy of the cache (0 for LRU, 1 for FIFO)" << std::endl;
+    std::cout << "         <WB>: Write-Back Policy for cache setup (0 for write-through, 1 for write-back)" << std::endl;
+    std::cout << " <TRACE_FILE>: Location of the *.t trace file, relative to the binary (or with absolute path)" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Example of a 32KB cache size, with 8-way associativity, with LRU replacement, no write-back, and a trace file at the same location of the binary called foo.t:" << std::endl;
+    std::cout << std::endl;
+    std::cout << "./SIM 32768 8 0 0 foo.t" << std::endl;
+    return 0;
+  }
+
   if (argc != 6)
   {
-    std::cerr
-        << "Usage: ./SIM <CACHE_SIZE> <ASSOC> <REPLACEMENT> <WB> <TRACE_FILE>"
-        << std::endl;
+    std::cerr << "Usage: ./SIM <CACHE_SIZE> <ASSOC> <REPLACEMENT> <WB> <TRACE_FILE>" << std::endl;
+    std::cerr << "To find meaning of all arguments, please do './SIM --help'" << std::endl;
     return 1;
   }
   
@@ -283,10 +300,10 @@ int main(int argc, char *argv[])
   dynamic_cache cache;
 
   // parse arguments
-  cli.CACHE_SIZE = atoi(argv[1]);
-  cli.ASSOC = atoi(argv[2]);
-  cli.REPLACEMENT_POLICY = atoi(argv[3]);
-  cli.WRITE_POLICY = atoi(argv[4]);
+  cli.CACHE_SIZE = std::atoi(argv[1]);
+  cli.ASSOC = std::atoi(argv[2]);
+  cli.REPLACEMENT_POLICY = std::atoi(argv[3]);
+  cli.WRITE_POLICY = std::atoi(argv[4]);
   const char *trace_file = argv[5];
 
   // statistic variables
