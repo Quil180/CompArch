@@ -1,4 +1,4 @@
-name: CMake Multi-Platform CI
+name: Project 1 CMake Multi-Platform Build Test
 
 on:
   push:
