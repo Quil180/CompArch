@@ -1,0 +1,38 @@
+name: CMake Multi-Platform CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    # Use a build matrix to run on different operating systems
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    
+    # Set the runner for the current job based on the matrix
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Create build directory
+        run: cmake -E make_directory ${{github.workspace}}/build
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config Release
+
+      # - name: Test
+      #   working-directory: ${{github.workspace}}/build
+      #   # Run tests, specifying the config for ctest.
+      #   # This is required for multi-config (Windows)
+      #   # and ignored by single-config (Linux, macOS).
+      #   run: ctest -C Release --output-on-failure
+

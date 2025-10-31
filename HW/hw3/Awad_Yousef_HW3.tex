@@ -91,7 +91,7 @@ This is the encoding of the instruction above:
 \end{center}
 
 \subsection{Draw the changes on the datapath diagram and provide the values of all the control signals.}
-
+\includegraphics[width=\textwidth]{q1.png}
 
 \section{2}
 \textbf{Given:} Modify the single-cycle datapath by implementing the conditional move instruction ‘MOVNZ’ (move-if-not-zero). Below is the syntax. The instruction below will move \$t1 into \$t0 if \$t2!=0. Otherwise, \$t0 will be set to “0”.
@@ -109,40 +109,22 @@ This is the encoding of the instruction above:
   \end{tabular}
 \end{center}
 
-\subsection{A) Draw the changes on the datapath diagram and provide the values of all the control signals.}
+\subsection{Draw the changes on the datapath diagram and provide the values of all the control signals.}
+\includegraphics[width=\textwidth]{q2.png}
 
 \section{3}
-\textbf{Given:} Consider a memory system with the following paramaters:
-\begin{itemize}
-	\item Translation Lookaside Buffer has 512 entries and is 2-way set associative.
-	\item 64KByte L1 Data Cache has 128 byte lines and is also 2-way set associative.
-	\item Virtual addresses are 64 bits and physical addresses are 32 bits.
-	\item 4KB page size.
-\end{itemize}
+\textbf{Given:} This instruction stores (\$t0+4) into the memory at address \$t1- what is the suitable format used and based on that , modify the datapath
+\begin{center}
+  swr4  \$t0,\$t1
+\end{center}
+\subsection{Draw the changes on the datapath diagram and provide the values of all the control signals.}
+\includegraphics[width=\textwidth]{q3.png}
 
 
-\includegraphics[width=\textwidth]{evidence.png}
-\newpage
-\lstinputlisting[
-	caption=My C Code,
-	label={lst:listing-cpp},
-	language=C++,
-	backgroundcolor=\color{backcolour},   
-	commentstyle=\color{codegreen},
-	keywordstyle=\color{magenta},
-	numberstyle=\tiny\color{codegray},
-	stringstyle=\color{codepurple},
-	basicstyle=\ttfamily\footnotesize,
-	breakatwhitespace=false,         
-	breaklines=true,                 
-	keepspaces=true,                 
-	numbers=left,       
-	numbersep=5pt,                  
-	showspaces=false,                
-	showstringspaces=false,
-	showtabs=false,                  
-	tabsize=2,
-]{main.c}
-\newpage
+\section{4}
+\textbf{Given:} Modify the datapath to implement 'load word and increment' (lwi), provide instruction exampe, suggest suitable instruction format used and based on that format, modify the datapath.
+
+\subsection{Draw the changes on the datapath diagram and provide the values of all the control signals.}
+\includegraphics[width=\textwidth]{q4.png}
 
 \end{document}
