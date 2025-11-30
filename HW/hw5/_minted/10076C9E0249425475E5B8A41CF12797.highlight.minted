@@ -1,0 +1,11 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n+nl}{Loop:}
+\PYG{+w}{  }\PYG{n+nf}{lw}\PYG{+w}{   }\PYG{n+no}{\PYGZdl{}t0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{(}\PYG{n+no}{\PYGZdl{}s1}\PYG{p}{)}
+\PYG{+w}{  }\PYG{n+nf}{add}\PYG{+w}{  }\PYG{n+no}{\PYGZdl{}t0}\PYG{p}{,}\PYG{+w}{ }\PYG{n+no}{\PYGZdl{}t0}\PYG{p}{,}\PYG{+w}{   }\PYG{n+no}{\PYGZdl{}s2}
+\PYG{+w}{  }\PYG{n+nf}{sub}\PYG{+w}{  }\PYG{n+no}{\PYGZdl{}t0}\PYG{p}{,}\PYG{+w}{ }\PYG{n+no}{\PYGZdl{}t0}\PYG{p}{,}\PYG{+w}{   }\PYG{n+no}{\PYGZdl{}s3}\PYG{+w}{  }\PYG{c+c1}{\PYGZsh{} extra dependency}
+\PYG{+w}{  }\PYG{n+nf}{and}\PYG{+w}{  }\PYG{n+no}{\PYGZdl{}t4}\PYG{p}{,}\PYG{+w}{ }\PYG{n+no}{\PYGZdl{}t0}\PYG{p}{,}\PYG{+w}{   }\PYG{n+no}{\PYGZdl{}s4}\PYG{+w}{  }\PYG{c+c1}{\PYGZsh{} added dependent instruction}
+\PYG{+w}{  }\PYG{n+nf}{or}\PYG{+w}{   }\PYG{n+no}{\PYGZdl{}t5}\PYG{p}{,}\PYG{+w}{ }\PYG{n+no}{\PYGZdl{}t4}\PYG{p}{,}\PYG{+w}{   }\PYG{n+no}{\PYGZdl{}s5}\PYG{+w}{  }\PYG{c+c1}{\PYGZsh{} added dependent instruction}
+\PYG{+w}{  }\PYG{n+nf}{sw}\PYG{+w}{   }\PYG{n+no}{\PYGZdl{}t5}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{(}\PYG{n+no}{\PYGZdl{}s1}\PYG{p}{)}
+\PYG{+w}{  }\PYG{n+nf}{addi}\PYG{+w}{ }\PYG{n+no}{\PYGZdl{}s1}\PYG{p}{,}\PYG{+w}{ }\PYG{n+no}{\PYGZdl{}s1}\PYG{p}{,}\PYG{+w}{   }\PYG{l+m+mi}{\PYGZhy{}4}
+\PYG{+w}{  }\PYG{n+nf}{bne}\PYG{+w}{  }\PYG{n+no}{\PYGZdl{}s1}\PYG{p}{,}\PYG{+w}{ }\PYG{n+no}{\PYGZdl{}zero}\PYG{p}{,}\PYG{+w}{ }\PYG{n+no}{Loop}
+\end{MintedVerbatim}

@@ -1,0 +1,318 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+
+% Microtype setup
+\let\CheckCommand\providecommand
+\usepackage{microtype}
+\microtypecontext{spacing=nonfrench}
+
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+\usetikzlibrary{automata,positioning,tikzmark}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\NewEnvironmentCopy{cminted}{minted}
+\AddToHook{env/cminted/begin}{%
+  \RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}%
+}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{Yousef Alaa Awad}
+\chead{\hmwkClass\: \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+%
+% Create Problem Sections
+%
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+
+\newcommand{\hmwkTitle}{Homework\ \#5}
+\newcommand{\hmwkClass}{Computer Architecture, Section 379}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}
+    \vspace{3in}
+}
+
+\author{Yousef Alaa Awad}
+
+\definecolor{hlbrown}{RGB}{255, 220, 180} % Light Orange/Brown for $s1
+\definecolor{hlyellow}{RGB}{255, 255, 180} % Light Yellow for group 1 ($t0, etc)
+\definecolor{hlgreen}{RGB}{200, 255, 200} % Light Green for group 2 ($t6, etc)
+\definecolor{hlteal}{RGB}{200, 240, 255}  % Light Cyan/Teal for group 3 ($t9, etc)
+
+\newcommand{\hl}[2]{\colorbox{#1}{\strut #2}}
+
+\begin{document}
+
+\maketitle
+\pagebreak
+
+% Include Picture example
+% \includegraphics[width=\textwidth]{q1.png}
+
+\section{1}
+\textbf{Given:} \textit{Given the following code:}
+\begin{center}
+  \begin{minipage}{0.65\linewidth}
+    \begin{minted}{gas}
+Loop:
+  lw   $t0, 0($s1)
+  add  $t0, $t0,   $s2
+  sub  $t0, $t0,   $s3  # extra dependency
+  and  $t4, $t0,   $s4  # added dependent instruction
+  or   $t5, $t4,   $s5  # added dependent instruction
+  sw   $t5, 0($s1)
+  addi $s1, $s1,   -4
+  bne  $s1, $zero, Loop
+    \end{minted}
+  \end{minipage}
+\end{center}
+
+\subsection{A) Arrange the loop in the two-issue Slot 1 / Slot 2 table format shown in slide 20, with respect to all hazards. Compute the IPC.}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{@{}lllc@{}}
+        \toprule
+        \textbf{cycle} & \textbf{} & \textbf{ALU/branch} & \textbf{Load/Store}\\ 
+        \midrule
+        1 & Loop: & nop                    & lw \$t0, 0(\$s1) \\
+        2 &       & addi \$s1, \$s1, -4    & nop              \\
+        3 &       & add \$t0, \$t0, \$s2   & nop              \\
+        4 &       & sub \$t0, \$t0, \$s3   & nop              \\
+        5 &       & and \$t4, \$t0, \$s4   & nop              \\
+        6 &       & or \$t5, \$t4, \$s5    & nop              \\
+        7 &       & bne \$s1, \$zero, Loop & sw \$t5, 4(\$s1) \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+\noindent
+\textbf{Performance Calculation:}
+\[
+\text{IPC} = \frac{8 \text{ instructions}}{7 \text{ cycles}} \approx 1.143\ IpC
+\]
+
+\subsection{B) Unroll the loop three times (as opposed to four in slide 23). Show the three copies. Rescheduled loop unrolled using the Slot 1 / Slot 2 table and compute IPC.}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{@{}lllc@{}}
+        \toprule
+        \textbf{cycle} & \textbf{} & \textbf{ALU/branch} & \textbf{Load/Store} \\ 
+        \midrule
+        1              & Loop: & nop & lw \$t0, 0(\$s1) \\
+        2              & & nop & nop \\
+        3              & & add \$t0, \$t0, \$s2 & nop \\
+        4              & & sub \$t0, \$t0, \$s3 & nop \\
+        5              & & and \$t4, \$t0, \$s4 & nop \\
+        6              & & or \$t5, \$t4, \$s5 & lw \$t0, -4(\$s1) \\
+        7              & & nop & sw \$t5, 0(\$s1) \\
+        8              & & add \$t0, \$t0, \$s2 & nop \\
+        9              & & sub \$t0, \$t0, \$s3 & nop \\
+        10             & & and \$t4, \$t0, \$s4 & nop \\
+        11             & & or \$t5, \$t4, \$s5 & lw \$t0, -8(\$s1) \\
+        12             & & nop & sw \$t5, -4(\$s1) \\
+        13             & & add \$t0, \$t0, \$s2 & nop \\
+        14             & & sub \$t0, \$t0, \$s3 & nop \\
+        15             & & and \$t4, \$t0, \$s4 & nop \\
+        16             & & or \$t5, \$t4, \$s5 & nop \\
+        17             & & addi \$s1, \$s1, -12 & sw \$t5, -8(\$s1) \\
+        18             & & bne \$s1, \$zero, Loop & nop \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+\vspace{0.5cm}
+\noindent
+\textbf{Performance Calculation:}
+\[
+\text{IPC} = \frac{20 \text{ instructions}}{18 \text{ cycles}} \approx 1.111\ IpC
+\]
+
+\subsection{C) Apply register renaming following the method shown in slide 26. Use distinct temporaries for each unrolled copy and highlight index changes. Reschedule and compute the IPC.}
+\begin{table}[H]
+    \centering
+    \setlength{\tabcolsep}{8pt} 
+    % Changed column structure: Cycle (c) is now first
+    \begin{tabular}{@{}clll@{}}
+        \toprule
+        \textbf{cycle} & \textbf{} & \textbf{ALU/branch} & \textbf{Load/Store} \\ 
+        \midrule
+        1 & Loop: & addi \hl{hlbrown}{\$s1}, \hl{hlbrown}{\$s1}, -12 & lw \hl{hlyellow}{\$t0}, 0(\$s1) \\
+        
+        2 &       & nop & lw \hl{hlgreen}{\$t6}, 8(\$s1) \\
+              
+        3 &       & add \hl{hlyellow}{\$t0}, \hl{hlyellow}{\$t0}, \$s2 & lw \hl{hlteal}{\$t9}, 4(\$s1) \\
+              
+        4 &       & sub \hl{hlyellow}{\$t0}, \hl{hlyellow}{\$t0}, \$s3 & nop \\
+              
+        5 &       & and \hl{hlyellow}{\$t4}, \hl{hlyellow}{\$t0}, \$s4 & nop \\
+              
+        6 &       & or \hl{hlyellow}{\$t5}, \hl{hlyellow}{\$t4}, \$s5 & nop \\
+              
+        7 &       & add \hl{hlgreen}{\$t6}, \hl{hlgreen}{\$t6}, \$s2 & nop \\
+              
+        8 &       & sub \hl{hlgreen}{\$t6}, \hl{hlgreen}{\$t6}, \$s3 & nop \\
+              
+        9 &       & and \hl{hlgreen}{\$t7}, \hl{hlgreen}{\$t6}, \$s4 & nop \\
+              
+        10 &      & or \hl{hlgreen}{\$t8}, \hl{hlgreen}{\$t7}, \$s5 & nop \\
+              
+        11 &      & add \hl{hlteal}{\$t9}, \hl{hlteal}{\$t9}, \$s2 & nop \\
+              
+        12 &      & sub \hl{hlteal}{\$t9}, \hl{hlteal}{\$t9}, \$s3 & nop \\
+              
+        13 &      & and \hl{hlteal}{\$t10}, \hl{hlteal}{\$t9}, \$s4 & sw \hl{hlyellow}{\$t5}, 12(\$s1) \\
+              
+        14 &      & or \hl{hlteal}{\$t11}, \hl{hlteal}{\$t10}, \$s5 & sw \hl{hlgreen}{\$t8}, 8(\$s1) \\
+              
+        15 &      & bne \hl{hlbrown}{\$s1}, \$zero, Loop & sw \hl{hlteal}{\$t11}, 4(\$s1) \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+\vspace{0.5cm}
+\noindent
+\textbf{Performance Calculation:}
+\[
+\text{IPC} = \frac{20 \text{ instructions}}{15 \text{ cycles}} \approx 1.333\ IpC
+\]
+
+
+\subsection{D) Compute the speedup achieved from part (b) to part (c).}
+The performance speedup is as follows:
+$$ \frac{IpC}{IpC} = \frac{1.333}{1.111} \approx 1.2\text{ times faster}$$
+
+\pagebreak
+\section{2}
+\textbf{Given:} \textit{Given the following code:}
+\begin{center}
+  \begin{minipage}{0.65\linewidth}
+    \begin{minted}{gas}
+addi $s1, $s0,   16
+lw   $t0, 0($s1)
+addi $s2, $s0,   200
+lw   $t1, 0($s2)
+mul  $t2, $t0,   $t1 # hazard chain extension
+add  $t3, $t2,   $t4
+and  $t5, $t3,   $t6
+or   $t7, $t1,   $t5
+    \end{minted}
+  \end{minipage}
+\end{center}
+
+\subsection{A) Identify the hazards and draw the dependency structure in the format used in slide 37.}
+The dependencies are as follows...
+\begin{table}[H]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \textbf{Register} & \textbf{Lines} \\ 
+        \midrule
+        \$s1 & Lines 1, 2 \\
+        \$t0 & Lines 2, 5 \\
+        \$s2 & Lines 3, 4 \\
+        \$t1 & Lines 4, 5 \\
+        \$t1 & Lines 4, 8 \\
+        \$t2 & Lines 5, 6 \\
+        \$t3 & Lines 6, 7 \\
+        \$t5 & Lines 7, 8 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{B) Assume both load instructions experience cache misses. Rewrite the code and annotate each line as in slide 38: “cache miss”, “on hold”, or “OK to execute.”}
+\begin{table}[H]
+    \centering
+    % Columns: Line Number (c), Instruction (l), Status (l)
+    \begin{tabular}{@{}cll@{}}
+        \toprule
+        \textbf{Instruction} & \textbf{Status} \\ 
+        \midrule
+        \texttt{addi\phantom{i} \$s1, \$s0, 16}                & ok \\
+        \texttt{lw\phantom{diii} \$t0, 0(\$s1)}      & cache miss \\
+        \texttt{addi \$s2, \$s0, 200}               & ok \\
+        \texttt{lw\phantom{diii} \$t1, 0(\$s2)}     & cache miss \\
+        \texttt{mul\phantom{i} \$t2, \$t0, \$t1}  & on hold \$t1 \\
+        \texttt{add\phantom{i} \$t3, \$t2, \$t4}  & on hold \$t2 \\
+        \texttt{and\phantom{i} \$t5, \$t3, \$t6}  & on hold \$t3 \\
+        \texttt{or\phantom{di} \$t7, \$t1, \$t5} & on hold \$t5 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\pagebreak
+\subsection{C) Before the misses resolve, show the out-of-order execution that can occur, and list the instructions in the reorder buffer with destination, ready/not-ready, and commit status.}
+\begin{itemize}
+    \item \textbf{Line 1:} Executes successfully.
+    \item \textbf{Line 2:} Encountered a cache miss.
+    \item \textbf{Line 3:} Executes out-of-order.
+    \item \textbf{Line 4:} Encountered a cache miss.
+    \item \textbf{Lines 5--8:} Currently on hold/dependent.
+\end{itemize}
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2} % Slightly more breathing room
+    \begin{tabular}{@{}cllll@{}}
+        \toprule
+        \textbf{\#} & \textbf{Instruction} & \textbf{Destination} & \textbf{Ready/Not Ready} & \textbf{Commit Status} \\ 
+        \midrule
+        1 & \texttt{addi \$s1, \$s0, 16}                & \$s1 & Ready     & \textbf{Committed} \\
+        2 & \texttt{lw\phantom{di}   \$t0, 0(\$s1)}     & \$t0 & Not Ready & Not Committed \\
+        3 & \texttt{addi \$s2, \$s0, 200}               & \$s2 & Ready     & Not Committed \\
+        4 & \texttt{lw\phantom{di}   \$t1, 0(\$s2)}     & \$t1 & Not Ready & Not Committed \\
+        5 & \texttt{mul\phantom{i}   \$t2, \$t0, \$t1}  & \$t2 & Not Ready & Not Committed \\
+        6 & \texttt{add\phantom{i}   \$t3, \$t2, \$t4}  & \$t3 & Not Ready & Not Committed \\
+        7 & \texttt{and\phantom{i}   \$t5, \$t3, \$t6}  & \$t5 & Not Ready & Not Committed \\
+        8 & \texttt{or\phantom{di}    \$t7, \$t1, \$t5} & \$t7 & Not Ready & Not Committed \\
+        \bottomrule
+    \end{tabular}
+    \caption*{Status of instructions in the Reorder Buffer / Pipeline}
+\end{table}
+
+\end{document}

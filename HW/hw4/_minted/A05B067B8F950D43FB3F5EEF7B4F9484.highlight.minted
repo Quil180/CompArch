@@ -1,0 +1,5 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{and}\PYG{+w}{ }\PYG{n+no}{t2}\PYG{p}{,}\PYG{+w}{ }\PYG{n+no}{t5}\PYG{p}{,}\PYG{+w}{ }\PYG{n+no}{t1}
+\PYG{n+nf}{sub}\PYG{+w}{ }\PYG{n+no}{t3}\PYG{p}{,}\PYG{+w}{ }\PYG{n+no}{t2}\PYG{p}{,}\PYG{+w}{ }\PYG{n+no}{t0}
+\PYG{n+nf}{nor}\PYG{+w}{ }\PYG{n+no}{t7}\PYG{p}{,}\PYG{+w}{ }\PYG{n+no}{t1}\PYG{p}{,}\PYG{+w}{ }\PYG{n+no}{t5}
+\end{MintedVerbatim}

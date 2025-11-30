@@ -14,12 +14,12 @@
 
 // The following are set by the command line
 struct cli_defines {
-  int CACHE_SIZE;
-  int NUM_SETS;
-  int ASSOC;
-  int BLOCK_SIZE = 64;    // 64 byte block size is default
-  int REPLACEMENT_POLICY; // 0 = LRU, 1 = FIFO
-  int WRITE_POLICY;       // 0 = write-through, 1 = write-back
+  long long int CACHE_SIZE;
+  long long int NUM_SETS;
+  long long int ASSOC;
+  long long int BLOCK_SIZE = 64;    // 64 byte block size is default
+  long long int REPLACEMENT_POLICY; // 0 = LRU, 1 = FIFO
+  long long int WRITE_POLICY;       // 0 = write-through, 1 = write-back
 };
 
 // dynamic cache structure variables below
@@ -84,12 +84,12 @@ void cleanup(cli_defines *cli, dynamic_cache *cache)
 void update_lru(long long int add, cli_defines *cli, dynamic_cache *cache)
 {
   // breaking down a memory address into cache components
-  int set = (add / cli->BLOCK_SIZE) % cli->NUM_SETS;
+  long long int set = (add / cli->BLOCK_SIZE) % cli->NUM_SETS;
   long long int tag_accessing = add / cli->BLOCK_SIZE;
 
   // finding which way was accessed
-  int accessed_way = -1;
-  for (int i = 0; i < cli->ASSOC; i++)
+  long long int accessed_way = -1;
+  for (long long int i = 0; i < cli->ASSOC; i++)
   {
     if (cache->valid[set][i] && cache->tag[set][i] == tag_accessing)
     {
@@ -103,10 +103,10 @@ void update_lru(long long int add, cli_defines *cli, dynamic_cache *cache)
     return;
   }
 
-  int old_position = cache->lru_pos[set][accessed_way];
+  long long int old_position = cache->lru_pos[set][accessed_way];
 
   // movin down all da all blocks with position < old_position down by 1
-  for (int i = 0; i < cli->ASSOC; i++)
+  for (long long int i = 0; i < cli->ASSOC; i++)
   {
     if (cache->lru_pos[set][i] < old_position)
     {
@@ -118,12 +118,12 @@ void update_lru(long long int add, cli_defines *cli, dynamic_cache *cache)
   cache->lru_pos[set][accessed_way] = 0;
 }
 
-int find_lru_victim(int set, cli_defines *cli, dynamic_cache *cache)
+long long int find_lru_victim(long long int set, cli_defines *cli, dynamic_cache *cache)
 {
-  int victim = 0;
-  int max_pos = cache->lru_pos[set][0];
+  long long int victim = 0;
+  long long int max_pos = cache->lru_pos[set][0];
 
-  for (int i = 1; i < cli->ASSOC; i++)
+  for (long long int i = 1; i < cli->ASSOC; i++)
   {
     if (cache->lru_pos[set][i] > max_pos)
     {
@@ -134,12 +134,12 @@ int find_lru_victim(int set, cli_defines *cli, dynamic_cache *cache)
   return victim;
 }
 
-int find_fifo_victim(int set, cli_defines *cli, dynamic_cache *cache)
+long long int find_fifo_victim(long long int set, cli_defines *cli, dynamic_cache *cache)
 {
-  int victim = 0;
+  long long int victim = 0;
   long long int min_counter = cache->fifo_counter[set][0];
 
-  for (int i = 1; i < cli->ASSOC; i++)
+  for (long long int i = 1; i < cli->ASSOC; i++)
   {
     if (cache->fifo_counter[set][i] < min_counter)
     {
@@ -150,9 +150,9 @@ int find_fifo_victim(int set, cli_defines *cli, dynamic_cache *cache)
   return victim;
 }
 
-int find_invalid_block(int set, cli_defines *cli, dynamic_cache *cache)
+long long int find_invalid_block(long long int set, cli_defines *cli, dynamic_cache *cache)
 {
-  for (int i = 0; i < cli->ASSOC; i++)
+  for (long long int i = 0; i < cli->ASSOC; i++)
   {
     if (!(cache->valid[set][i]))
     {
@@ -162,16 +162,16 @@ int find_invalid_block(int set, cli_defines *cli, dynamic_cache *cache)
   return -1;
 }
 
-void simulate_access(char opcode, long long int add, unsigned int* hit, unsigned int *miss, unsigned int *memory_writes, unsigned int *memory_reads, cli_defines *cli, dynamic_cache *cache)
+void simulate_access(char opcode, long long int add, unsigned long long int* hit, unsigned long long int *miss, unsigned long long int *memory_writes, unsigned long long int *memory_reads, cli_defines *cli, dynamic_cache *cache)
 {
-  int set = (add / cli->BLOCK_SIZE) % cli->NUM_SETS;
+  long long int set = (add / cli->BLOCK_SIZE) % cli->NUM_SETS;
   long long int tag_accessing = add / cli->BLOCK_SIZE;
 
   bool is_hit = false;
-  int hit_way = -1;
+  long long int hit_way = -1;
 
   // checkin for cache hit
-  for (int i = 0; i < cli->ASSOC; i++)
+  for (long long int i = 0; i < cli->ASSOC; i++)
   {
     if (cache->valid[set][i] && tag_accessing == cache->tag[set][i])
     {
@@ -214,7 +214,7 @@ void simulate_access(char opcode, long long int add, unsigned int* hit, unsigned
     (*miss)++;
     (*memory_reads)++; // ALWAYS read from memory on miss
 
-    int victim_way;
+    long long int victim_way;
 
     // trying to find an invalid block first
     victim_way = find_invalid_block(set, cli, cache);
@@ -307,10 +307,10 @@ int main(int argc, char *argv[])
   const char *trace_file = argv[5];
 
   // statistic variables
-  unsigned int hit = 0;
-  unsigned int miss = 0;
-  unsigned int memory_reads = 0;
-  unsigned int memory_writes = 0;
+  unsigned long long int hit = 0;
+  unsigned long long int miss = 0;
+  unsigned long long int memory_reads = 0;
+  unsigned long long int memory_writes = 0;
 
   // calculate number of sets
   cli.NUM_SETS = cli.CACHE_SIZE / (cli.BLOCK_SIZE * cli.ASSOC);
@@ -341,8 +341,22 @@ int main(int argc, char *argv[])
   // Closing the file
   file.close();
 
+  if (cli.WRITE_POLICY == 1)
+  {
+    for (long long int i = 0; i < cli.NUM_SETS; i++)
+    {
+      for (long long int j = 0; j < cli.ASSOC; j++)
+      {
+        if (cache.valid[i][j] && cache.dirty[i][j])
+        {
+          memory_writes++;
+        }
+      }
+    }
+  }
+
   // Calculate miss ratio
-  int total = hit + miss;
+  long long int total = hit + miss;
   double miss_ratio = (total > 0) ? (double)miss / total : 0.0;
 
   // Print statistics

@@ -1,0 +1,421 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{varwidth}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+
+\pgfplotsset{compat=1.18}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{CStyle}{
+	language=C++,
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	keepspaces=true,                 
+	numbers=left,       
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2,
+}
+\lstset{style=CStyle}
+
+\title{Project 1 Report \\ \large EEL4268 -- 00379}
+\author{Yousef Awad}
+\date{November 2025}
+\setcounter{secnumdepth}{0}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Testing Part A}
+We were told to test with the following specifications:
+\begin{itemize}
+  \item Cache Associativity: 4
+  \item Write-Back
+  \item Replacement Policy: LRU
+\end{itemize}
+There the command is the following:
+\begin{center}
+  ./SIM CACHE\_SIZE 4 0 1 TRACE\_FILE
+\end{center}
+Here are the following plots
+\begin{center}
+  \pgfplotstabletypeset[col sep=space]{data/xsbench_a.dat}
+\end{center}
+\begin{center}
+  MiniFE
+  \pgfplotstabletypeset[col sep=space]{data/minife_a.dat}
+\end{center}
+And here it is graphed (with respect to miss ratio and cache size):
+\newline
+\begin{center}
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={Cache Size (KB)},
+      ylabel={Miss Ratio},
+      legend pos=north west
+    ]
+
+    % Plot the first data series
+    \addplot table [
+      x=Cache-Size, 
+      y=Miss-Ratio
+    ] {data/xsbench_a.dat};
+    \addlegendentry{XSBENCH}
+
+    % Plot the second data series
+    \addplot table [
+      x=Cache-Size, 
+      y=Miss-Ratio
+    ] {data/minife_a.dat};
+    \addlegendentry{MiniFE}
+
+    \end{axis}
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={Cache Size (KB)},
+      ylabel={Writes},
+      legend pos=north west
+    ]
+
+    % Plot the first data series
+    \addplot table [
+      x=Cache-Size, 
+      y=Writes
+    ] {data/xsbench_a.dat};
+    \addlegendentry{XSBENCH}
+
+    % Plot the second data series
+    \addplot table [
+      x=Cache-Size, 
+      y=Writes
+    ] {data/minife_a.dat};
+    \addlegendentry{MiniFE}
+
+    \end{axis}
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={Cache Size (KB)},
+      ylabel={Reads},
+      legend pos=north west
+    ]
+
+    % Plot the first data series
+    \addplot table [
+      x=Cache-Size, 
+      y=Reads
+    ] {data/xsbench_a.dat};
+    \addlegendentry{XSBENCH}
+
+    % Plot the second data series
+    \addplot table [
+      x=Cache-Size, 
+      y=Reads
+    ] {data/minife_a.dat};
+    \addlegendentry{MiniFE}
+
+    \end{axis}
+  \end{tikzpicture}
+\end{center}
+
+\pagebreak
+\section{Testing Part B}
+We were told to test with the following specifications:
+\begin{itemize}
+  \item Cache Associativity: 4
+  \item Write-Through
+  \item Replacement Policy: LRU
+\end{itemize}
+There the command is the following:
+\begin{center}
+  ./SIM CACHE\_SIZE 4 0 0 TRACE\_FILE
+\end{center}
+Here are the following plots
+\begin{center}
+  \pgfplotstabletypeset[col sep=space]{data/xsbench_b.dat}
+\end{center}
+\begin{center}
+  MiniFE
+  \pgfplotstabletypeset[col sep=space]{data/minife_b.dat}
+\end{center}
+And here it is graphed (with respect to miss ratio and cache size):
+\newline
+\begin{center}
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={Cache Size (KB)},
+      ylabel={Miss Ratio},
+      legend pos=north west
+    ]
+
+    % Plot the first data series
+    \addplot table [
+      x=Cache-Size, 
+      y=Miss-Ratio
+    ] {data/xsbench_b.dat};
+    \addlegendentry{XSBENCH}
+
+    % Plot the second data series
+    \addplot table [
+      x=Cache-Size, 
+      y=Miss-Ratio
+    ] {data/minife_b.dat};
+    \addlegendentry{MiniFE}
+
+    \end{axis}
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={Cache Size (KB)},
+      ylabel={Writes},
+      legend pos=north west
+    ]
+
+    % Plot the first data series
+    \addplot table [
+      x=Cache-Size, 
+      y=Writes
+    ] {data/xsbench_b.dat};
+    \addlegendentry{XSBENCH}
+
+    % Plot the second data series
+    \addplot table [
+      x=Cache-Size, 
+      y=Writes
+    ] {data/minife_b.dat};
+    \addlegendentry{MiniFE}
+
+    \end{axis}
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={Cache Size (KB)},
+      ylabel={Reads},
+      legend pos=north west
+    ]
+
+    % Plot the first data series
+    \addplot table [
+      x=Cache-Size, 
+      y=Reads
+    ] {data/xsbench_b.dat};
+    \addlegendentry{XSBENCH}
+
+    % Plot the second data series
+    \addplot table [
+      x=Cache-Size, 
+      y=Reads
+    ] {data/minife_b.dat};
+    \addlegendentry{MiniFE}
+
+    \end{axis}
+  \end{tikzpicture}
+\end{center}
+Note how the hit rate remains steady, with all being written to memory when compared to the write-back mode of cache, as well as how everything else remanis the same as in Part A.
+
+
+\pagebreak
+\section{Testing Part C}
+The command is the following:
+\begin{center}
+  ./SIM 32768 ASSOC 0 1 TRACE\_FILE
+\end{center}
+Here are the following plots
+\begin{center}
+  XSBENCH
+  \pgfplotstabletypeset[col sep=space]{data/xsbench_c.dat}
+\end{center}
+\begin{center}
+  MiniFE
+  \pgfplotstabletypeset[col sep=space]{data/minife_c.dat}
+\end{center}
+And here it is graphed (with respect to miss ratio and cache size):
+\newline
+\begin{center}
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={Associativity},
+      ylabel={Miss Ratio},
+      legend pos=north west
+    ]
+
+    % Plot the first data series
+    \addplot table [
+      x=ASSOC, 
+      y=Miss-Ratio
+    ] {data/xsbench_c.dat};
+    \addlegendentry{XSBENCH}
+
+    % Plot the second data series
+    \addplot table [
+      x=ASSOC, 
+      y=Miss-Ratio
+    ] {data/minife_c.dat};
+    \addlegendentry{MiniFE}
+
+    \end{axis}
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={Associativity},
+      ylabel={Writes},
+      legend pos=north west
+    ]
+
+    % Plot the first data series
+    \addplot table [
+      x=ASSOC, 
+      y=Writes
+    ] {data/xsbench_c.dat};
+    \addlegendentry{XSBENCH}
+
+    % Plot the second data series
+    \addplot table [
+      x=ASSOC, 
+      y=Writes
+    ] {data/minife_c.dat};
+    \addlegendentry{MiniFE}
+
+    \end{axis}
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={Associativity},
+      ylabel={Reads},
+      legend pos=north west
+    ]
+
+    % Plot the first data series
+    \addplot table [
+      x=ASSOC, 
+      y=Reads
+    ] {data/xsbench_c.dat};
+    \addlegendentry{XSBENCH}
+
+    % Plot the second data series
+    \addplot table [
+      x=ASSOC, 
+      y=Reads
+    ] {data/minife_c.dat};
+    \addlegendentry{MiniFE}
+
+    \end{axis}
+  \end{tikzpicture}
+\end{center}
+
+\pagebreak
+\section{Testing Part D}
+The command is the following:
+\begin{center}
+  ./SIM CACHE\_SIZE 4 1 0 TRACE\_FILE
+\end{center}
+Here are the following plots
+\begin{center}
+  XSBENCH
+  \pgfplotstabletypeset[col sep=space]{data/xsbench_d.dat}
+\end{center}
+\begin{center}
+  MiniFE
+  \pgfplotstabletypeset[col sep=space]{data/minife_d.dat}
+\end{center}
+And here it is graphed (with respect to miss ratio and cache size):
+\newline
+\begin{center}
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={Associativity},
+      ylabel={Miss Ratio},
+      legend pos=north west
+    ]
+
+    % Plot the first data series
+    \addplot table [
+      x=ASSOC, 
+      y=Miss-Ratio
+    ] {data/xsbench_d.dat};
+    \addlegendentry{XSBENCH}
+
+    % Plot the second data series
+    \addplot table [
+      x=ASSOC, 
+      y=Miss-Ratio
+    ] {data/minife_d.dat};
+    \addlegendentry{MiniFE}
+
+    \end{axis}
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={Associativity},
+      ylabel={Writes},
+      legend pos=north west
+    ]
+
+    % Plot the first data series
+    \addplot table [
+      x=ASSOC, 
+      y=Writes
+    ] {data/xsbench_d.dat};
+    \addlegendentry{XSBENCH}
+
+    % Plot the second data series
+    \addplot table [
+      x=ASSOC, 
+      y=Writes
+    ] {data/minife_d.dat};
+    \addlegendentry{MiniFE}
+
+    \end{axis}
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={Associativity},
+      ylabel={Reads},
+      legend pos=north west
+    ]
+
+    % Plot the first data series
+    \addplot table [
+      x=ASSOC, 
+      y=Reads
+    ] {data/xsbench_d.dat};
+    \addlegendentry{XSBENCH}
+
+    % Plot the second data series
+    \addplot table [
+      x=ASSOC, 
+      y=Reads
+    ] {data/minife_d.dat};
+    \addlegendentry{MiniFE}
+
+    \end{axis}
+  \end{tikzpicture}
+\end{center}
+
+\pagebreak
+\section{Main.cpp}
+\lstinputlisting{../src/main.cpp}
+
+\section{CMakeLists.txt}
+\lstinputlisting{../CMakeLists.txt}
+\end{document}

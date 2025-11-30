@@ -1,0 +1,230 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{varwidth}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+
+\pgfplotsset{compat=1.18}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{CStyle}{
+	language=C,
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	keepspaces=true,                 
+	numbers=left,       
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2,
+}
+\lstset{style=CStyle}
+
+\title{Project 2 Report \\ \large EEL4768}
+\author{Yousef Awad}
+\date{November 2025}
+\setcounter{secnumdepth}{0}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Part A: Varying N (M=4)}
+In this part, we fix M at 4 bits (16 entries) and vary N from 1 to 4.
+\begin{center}
+  \pgfplotstabletypeset[col sep=space]{data/part_a.dat}
+\end{center}
+
+\begin{center}
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+        width=0.95\linewidth,
+        title={MCF Misprediction Rate vs N (M=4)},
+        xlabel={N (Global History Bits)},
+        ylabel={Misprediction Rate (\%)},
+        grid=major
+      ]
+      \addplot table [x=N, y=MCF] {data/part_a.dat};
+      \end{axis}
+    \end{tikzpicture}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+        width=0.95\linewidth,
+        title={GoBMK Misprediction Rate vs N (M=4)},
+        xlabel={N (Global History Bits)},
+        ylabel={Misprediction Rate (\%)},
+        grid=major
+      ]
+      \addplot table [x=N, y=GoBMK] {data/part_a.dat};
+      \end{axis}
+    \end{tikzpicture}
+  \end{minipage}
+\end{center}
+
+\pagebreak
+\section{Part B: Varying M (N=4)}
+In this part, we fix N at 4 bits and vary M from 4 to 7.
+\begin{center}
+  \pgfplotstabletypeset[col sep=space]{data/part_b.dat}
+\end{center}
+
+\begin{center}
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+        width=0.95\linewidth,
+        title={MCF Misprediction Rate vs M (N=4)},
+        xlabel={M (PC Index Bits)},
+        ylabel={Misprediction Rate (\%)},
+        grid=major
+      ]
+      \addplot table [x=M, y=MCF] {data/part_b.dat};
+      \end{axis}
+    \end{tikzpicture}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+        width=0.95\linewidth,
+        title={GoBMK Misprediction Rate vs M (N=4)},
+        xlabel={M (PC Index Bits)},
+        ylabel={Misprediction Rate (\%)},
+        grid=major
+      ]
+      \addplot table [x=M, y=GoBMK] {data/part_b.dat};
+      \end{axis}
+    \end{tikzpicture}
+  \end{minipage}
+\end{center}
+
+\pagebreak
+\section{Part C: Varying M (N=0)}
+In this part, we fix N at 0 bits (no global history) and vary M from 4 to 7. This effectively makes it a bimodal predictor.
+\begin{center}
+  \pgfplotstabletypeset[col sep=space]{data/part_c.dat}
+\end{center}
+
+\begin{center}
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+        width=0.95\linewidth,
+        title={MCF Misprediction Rate vs M (N=0)},
+        xlabel={M (PC Index Bits)},
+        ylabel={Misprediction Rate (\%)},
+        grid=major
+      ]
+      \addplot table [x=M, y=MCF] {data/part_c.dat};
+      \end{axis}
+    \end{tikzpicture}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+        width=0.95\linewidth,
+        title={GoBMK Misprediction Rate vs M (N=0)},
+        xlabel={M (PC Index Bits)},
+        ylabel={Misprediction Rate (\%)},
+        grid=major
+      ]
+      \addplot table [x=M, y=GoBMK] {data/part_c.dat};
+      \end{axis}
+    \end{tikzpicture}
+  \end{minipage}
+\end{center}
+
+\section{Comparison of Part B and Part C}
+In Part B, we used a Gshare predictor with a fixed global history length of $N=4$ while varying the table size index bits $M$. In Part C, we used a Bimodal predictor ($N=0$), effectively using only the PC to index the table, while varying $M$.
+
+\subsection{Analysis}
+\textbf{MCF Trace:}
+The Bimodal predictor (Part C, $N=0$) consistently outperforms the Gshare predictor (Part B, $N=4$) across all tested table sizes ($M=4$ to $7$).
+\begin{itemize}
+    \item At $M=4$, the difference is significant: Gshare has a misprediction rate of 31.72\% while Bimodal is 23.76\%.
+    \item As $M$ increases, the gap narrows. At $M=7$, Gshare is 12.40\% and Bimodal is 10.63\%.
+\end{itemize}
+\textbf{Reasoning:} The MCF trace likely suffers from significant destructive aliasing (interference) in the Pattern History Table when using Gshare with small table sizes. The XOR hashing of the PC and GHR maps multiple unrelated branches to the same entry, causing them to overwrite each other's state. Since the table sizes are very small (e.g., $2^4=16$ entries), this interference is severe. The Bimodal predictor ($N=0$) uses only the PC bits, which might provide a cleaner separation for the dominant branches in this specific trace at these small sizes.
+
+\textbf{GoBMK Trace:}
+The results for GoBMK show a crossover point where Gshare begins to outperform Bimodal.
+\begin{itemize}
+    \item At small table sizes ($M=4, 5$), Bimodal ($N=0$) is slightly better or comparable to Gshare ($N=4$).
+    \item At larger table sizes ($M=6, 7$), Gshare starts to outperform Bimodal. For instance, at $M=7$, Gshare achieves 0.58\% compared to Bimodal's 0.60\%.
+\end{itemize}
+\textbf{Reasoning:} GoBMK appears to benefit from global history information. However, at very small table sizes ($M=4, 5$), the aliasing penalty of Gshare outweighs the benefit of the history. As the table size increases ($M=6, 7$), the interference is reduced enough that the predictive power of the global history becomes advantageous, allowing Gshare to overtake the simple Bimodal predictor.
+
+\subsection{Overlay Graphs}
+The following graphs overlay the results from Part B (Gshare, $N=4$) and Part C (Bimodal, $N=0$) to visualize the differences.
+
+\begin{center}
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+        width=0.95\linewidth,
+        title={MCF Comparison (N=4 vs N=0)},
+        xlabel={M (PC Index Bits)},
+        ylabel={Misprediction Rate (\%)},
+        legend style={at={(0.5,-0.4)},anchor=north},
+        grid=major
+      ]
+      \addplot table [x=M, y=MCF] {data/part_b.dat};
+      \addlegendentry{Gshare (N=4)}
+      \addplot table [x=M, y=MCF] {data/part_c.dat};
+      \addlegendentry{Bimodal (N=0)}
+      \end{axis}
+    \end{tikzpicture}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+        width=0.95\linewidth,
+        title={GoBMK Comparison (N=4 vs N=0)},
+        xlabel={M (PC Index Bits)},
+        ylabel={Misprediction Rate (\%)},
+        legend style={at={(0.5,-0.4)},anchor=north},
+        grid=major
+      ]
+      \addplot table [x=M, y=GoBMK] {data/part_b.dat};
+      \addlegendentry{Gshare (N=4)}
+      \addplot table [x=M, y=GoBMK] {data/part_c.dat};
+      \addlegendentry{Bimodal (N=0)}
+      \end{axis}
+    \end{tikzpicture}
+  \end{minipage}
+\end{center}
+
+\pagebreak
+\section{Source Code (sim.c)}
+\lstinputlisting{sim.c}
+
+\end{document}

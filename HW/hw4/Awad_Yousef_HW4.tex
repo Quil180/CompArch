@@ -1,0 +1,420 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% Microtype setup
+\let\CheckCommand\providecommand
+\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=110,stretch=10,shrink=10]{microtype}
+\microtypecontext{spacing=nonfrench}
+
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+\usetikzlibrary{automata,positioning,tikzmark}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\captionsetup[figure]{labelformat=empty,labelsep=none,name=Code}
+
+\NewEnvironmentCopy{cminted}{minted}
+\AddToHook{env/cminted/begin}{%
+  \RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}%
+}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{Yousef Alaa Awad}
+\chead{\hmwkClass\: \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+%
+% Create Problem Sections
+%
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+
+\newcommand{\hmwkTitle}{Homework\ \#4}
+\newcommand{\hmwkClass}{Computer Architecture, Section 379}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}
+    \vspace{3in}
+}
+
+\author{Yousef Alaa Awad}
+
+\begin{document}
+
+\maketitle
+\pagebreak
+
+% Include Picture example
+% \includegraphics[width=\textwidth]{q1.png}
+
+\section{1}
+\textbf{Given:} Answer the following questions based on the following table. All different datapaths support the following four instruction types with listed delay of each component. Assume no hazard is detected in the piplined datapath. Please explain your answer.
+\begin{center}
+  \begin{tabularx}{\textwidth}{|C|C|C|C|C|C|C|}
+    \hline
+    Instruction Class & Instruction Fetch & Register Read & ALU Operation & Data Access & Register Write & Total Time \\
+    \hline
+    \hline
+    Load Word (lw) & 200 ps & 100 ps & 200 ps & 200 ps & 100 ps & 800 ps \\
+    \hline
+    Store Word (sw) & 200 ps & 100 ps & 200 ps & 200 ps & & 700 ps \\
+    \hline
+    R-format (add, sub, and, or, slt) & 200 ps & 100 ps & 200 ps & & 100 ps & 600 ps \\
+    \hline
+    Branch (beq) & 200 ps & 100 ps & 200 ps & & & 500 ps \\
+    \hline
+  \end{tabularx}
+\end{center}
+
+\subsection{A) What should the clock cycle time be for the single-cycle and pipelined datapaths? Please explain your answer.}
+\indent
+
+For a single cycle data path the clock cycle time would be the highest time taken instruction time. In this case it would be the load word instruction, and therefore each cycle would take 800ps.
+
+For a pipelined data-path, the clock cycle time would be the highest time taken per portion of an instruction. In this case, according to the table, it would be 200 ps.
+
+\subsection{B) What is the latency (defined as the delay from when the instruction enters the datapath until it finishes) of an R-format instruction in the single-cycle and pipelined datapaths?}
+\indent
+
+The latency of a single cycle datapath R-format instruction would simply be the previous single cycle time that we found in Part A. Therefore, it is 800 ps.
+
+The latency of a pipelined datapath R-format instruction would be the total stages that are nessecary multiplied by the time per stage. In the case of R-format instructions, it requires 4 stages (Fetch, Decode, Operate, and Write-Back) all of which taking 200 ps of time (as taken from Part A). Therefore, for a pipelined datapath, an R-format instruction would take 800 ps, coincidentally taking the same amount of time as a single-cycle datapath.
+
+\subsection{C) What is the latency (defined as the delay from when the instruction enters the datapath until it finishes) of load word (lw) instruction in the single-cycle and pipelined datapaths?}
+\indent
+
+For load word in a single-cycle datapath, it would, again as in Part B, be simply the total cycle time, or, therefore, 800 ps.
+
+For load word in the pipelined datapath, it would simply, as in Part B, be the amount of stages times the time per stage. In the case of load word, it contains 5 stages, all taking 200 ps per, making it have a total latency time of 1000 ps.
+
+\subsection{D) What is the averaged throughput (defined as the number of instructions executed in 1 nanosecond in this case) of the single-cycle and pipelined datapaths? Assume the frequency of four different instruction types are the same.}
+\indent
+
+Now, before we begin, 1 nanosecond is 1000 picoseconds!! 
+
+For a single-cycle datapath each cycle takes 800 ps, as found in Part A. Therefore, the instructions per nanoseconds is simply $\frac{\text{1 nanosecond}}{\text{800 picosecond per instruction}}$ which is $\frac{\text{1000 picoseconds}}{\text{800 picosecond per instruction}}$ and comes out to 1.25 instructions per nanosecond.
+
+For a pipelined datapath, each cycle takes 200 ps, which is the same as each stage time. Now, in a pipelined datapath, each stage is the execution of a different instruction, meaning that, after 5 instructions enter the datapath, you are completing an instruction every 200 ps/cycle. This, therefore, means that for every 1 nanosecond, there will be 5 instructions per nanosecond.
+
+
+\section{2}
+\textbf{Given:} The following codes run on the five-stage pipelined datapth. For each piece of code, answer the following questions as well.
+\newline
+\begin{figure}[h!]
+  \centering
+  \begin{subfigure}{0.2\textwidth}
+    \begin{minted}{gas}
+    sub t1, t2, t3
+    add t1, t4, t5
+    or t4, t2, t6
+    \end{minted}
+    \caption{Code 1}
+  \end{subfigure}%
+  \begin{subfigure}{0.2\textwidth}
+    \begin{minted}{gas}
+    and t2, t5, t1
+    sub t3, t2, t0
+    nor t7, t1, t5
+    \end{minted}
+    \caption{Code 2}
+  \end{subfigure}%
+  \begin{subfigure}{0.2\textwidth}
+    \begin{minted}{gas}
+    and t2, t5, t1
+    sub t3, t2, t0
+    nor t7, t2, t1
+    \end{minted}
+    \caption{Code 3}
+  \end{subfigure}%
+  \begin{subfigure}{0.2\textwidth}
+    \begin{minted}{gas}
+    lw t1, 22(t0)
+    and t2, t1, t3
+    \end{minted}
+    \caption{Code 4}
+  \end{subfigure}%
+  \begin{subfigure}{0.2\textwidth}
+    \begin{minted}{gas}
+    lw t1, 22(t0)
+    sub t6, t0, t2
+    xor t3, t1, t5
+    \end{minted}
+    \caption{Code 5}
+  \end{subfigure}
+\end{figure}
+
+\subsection{A) Without forwarding, insert the necessary number of ‘nops’ for the code to execute correctly.}
+Now, assuming that there is a 5-stage pipelined datapath, we need too, for all codes, find out if any instructions (up to 4 in the past) require any registers/memory located in the current instructions being executed. We do this so that we can stall the CPU via bubbles as the pipeline \textbf{does not} have any forwarding (of which, nowadays, isn't done anymore but I digress).
+
+\subsubsection{Code 1:}
+\begin{figure}[htp]
+  \centering
+  \begin{cminted}{gas}
+sub t1, t2, t3
+add t1, t4, t5
+or t4, t2, t6
+  \end{cminted}
+  \caption{Code 1}
+\end{figure}
+Now in code 1 (shown above) literally none of the following instructions require a result to be finalized before execution. Especially so since this is a single-core cpu.
+\begin{center}
+  \begin{tabularx}{\textwidth}{|C||C|C|C|C|C|C|C|}
+    \hline
+    Cycles & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+    \hline
+    sub & FETCH & DECODE & EXEC & MEM & WB &  & \\
+    \hline
+    add &  & FETCH & DECODE & EXEC & MEM & WB & \\
+    \hline
+    or &  &  & FETCH & DECODE & EXEC & MEM & WB \\
+    \hline
+  \end{tabularx}
+\end{center}
+
+\pagebreak
+\subsubsection{Code 2:}
+\begin{figure}[htp]
+  \centering
+  \begin{cminted}{gas}
+and t2, t5, t1
+sub t3, t2, t0
+nor t7, t1, t5
+  \end{cminted}
+  \caption{Code 2}
+\end{figure}
+Now in code 2 (shown above) sub utilizes the register t2 from the previous instruction and, and since sub requires t2 to be written too, then the sub instruction requires to wait an additional 3 cycles before it can do a register read (or 3 nops). That is the only one that we need to insert NOPs for, and so it will look like the following code!
+\begin{center}
+  \begin{tabularx}{\textwidth}{|C||C|C|C|C|C|C|C|}
+    \hline
+    Cycles & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+    \hline
+    and & FETCH & DECODE & EXEC & MEM & WB &  & \\
+    \hline
+    sub &  & FETCH & - & - & DECODE & EXEC & cont* \\
+    \hline
+    nor &  &  &  & & FETCH & DECODE & cont* \\
+    \hline
+  \end{tabularx}
+\end{center}
+\textit{*sub/nor continues as normal and is ommitted for space reasons}
+
+\subsubsection{Code 3:}
+\begin{figure}[htp]
+  \centering
+  \begin{cminted}{gas}
+and t2, t5, t1
+sub t3, t2, t0
+nor t7, t2, t1
+  \end{cminted}
+  \caption{Code 3}
+\end{figure}
+Now in code 3 (shown above) sub utilizes the register t2 from the previous instruction and, and since sub requires t2 to be written too, then the sub instruction requires to wait an additional 3 cycles before it can do a register read (or 3 nops), and thankfully by the time that nor requires t2 as well, nothing about it has to change. That is the only one that we need to insert NOPs for, and so it will look like the following code!
+\begin{center}
+  \begin{tabularx}{\textwidth}{|C||C|C|C|C|C|C|C|}
+    \hline
+    Cycles & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+    \hline
+    and & FETCH & DECODE & EXEC & MEM & WB &  & \\
+    \hline
+    sub &  & FETCH & - & - & DECODE & EXEC & MEM \\
+    \hline
+    nor &  &  &  & & FETCH & DECODE & cont* \\
+    \hline
+  \end{tabularx}
+\end{center}
+\textit{*nor continues as normal and is ommitted for space reasons}
+
+\pagebreak
+\subsubsection{Code 4:}
+\begin{figure}[htp]
+  \centering
+  \begin{cminted}{gas}
+lw t1, 22(t0)
+and t2, t1, t3
+  \end{cminted}
+  \caption{Code 4}
+\end{figure}
+Now in code 4 (shown above) and utilizes the register t1 from the previous instruction lw, and since lw requires t1 to be written too after loading from memory, then the and instruction requires to wait an additional 2 cycles before it can do a register read (or 2 nops). That is the only one that we need to insert NOPs for, and so it will look like the following code!
+\begin{center}
+  \begin{tabularx}{\textwidth}{|C||C|C|C|C|C|C|C|}
+    \hline
+    Cycles & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+    \hline
+    lw & FETCH & DECODE & EXEC & MEM & WB & & \\
+    \hline
+    and &  & FETCH & - & - & DECODE & EXEC & cont* \\
+    \hline
+  \end{tabularx}
+\end{center}
+\textit{*and continues as normal and is ommitted for space reasons}
+
+\subsubsection{Code 5:}
+\begin{figure}[htp]
+  \centering
+  \begin{cminted}{gas}
+lw t1, 22(t0)
+sub t6, t0, t2
+xor t3, t1, t5
+  \end{cminted}
+  \caption{Code 5}
+\end{figure}
+Now in code 5 (shown above) xor utilizes the register t1 from the previous previous instruction lw, and since lw requires t1 to be written too after loading from memory, then the sub instruction occurs, AND THEN the xor instruction occurs and requires t1, it needs to wait an additional cycle before it can do a register read (or 1 nop). That is the only one that we need to insert NOPs for, and so it will look like the following code!
+\begin{center}
+  \begin{tabularx}{\textwidth}{|C||C|C|C|C|C|C|C|}
+    \hline
+    Cycles & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+    \hline
+    lw & FETCH & DECODE & EXEC & MEM & WB & &\\
+    \hline
+    sub &  & FETCH & DECODE & EXEC & MEM & WB & \\
+    \hline
+    xor &  & & FETCH & - & DECODE & EXEC & cont* \\
+    \hline
+  \end{tabularx}
+\end{center}
+\textit{*xor continues as normal and is ommitted for space reasons}
+
+\pagebreak
+\subsection{B) With the forwarding unit available (only supports forwards MEM$\rightarrow$EX and WB$\rightarrow$EX), show how the code will execute. Mention the data that’s forwarded between the stages. Use ‘nops’ only when necessary.}
+Now, with forwarding available, it does not need to wait for an instruction to end!!! This therefore means that it can compress the NOPs needed and simply has to finish the stage that of register write/write-back! This therefore means the following for the codes (explanation is self-explanatory so it is ommited):
+\subsubsection{Code 1 - SAME}
+\begin{center}
+  \begin{tabularx}{\textwidth}{|C||C|C|C|C|C|C|C|}
+    \hline
+    Cycles & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+    \hline
+    sub & FETCH & DECODE & EXEC & MEM & WB &  & \\
+    \hline
+    add &  & FETCH & DECODE & EXEC & MEM & WB & \\
+    \hline
+    or &  &  & FETCH & DECODE & EXEC & MEM & WB \\
+    \hline
+  \end{tabularx}
+\end{center}
+
+\subsubsection{Code 2}
+\begin{center}
+  \begin{tabularx}{\textwidth}{|C||C|C|C|C|C|C|C|}
+    \hline
+    Cycles & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+    \hline
+  and & FETCH & DECODE & EXEC & \tikzmarknode{a}{}  MEM & WB &  & \\
+    \hline
+    sub &  & FETCH & DECODE & \tikzmarknode{b}{}  EXEC & MEM & WB & \\
+    \hline
+    nor &  &  & FETCH & DECODE & EXEC & MEM & WB \\
+    \hline
+  \end{tabularx}
+  \begin{tikzpicture}[overlay, remember picture,
+                    shorten >=0pt, shorten <=0pt]
+  \draw [red, very thick, ->] (a) -- (b);
+  \end{tikzpicture}
+\end{center}
+\textit{Note: t2 is being forwarded (MEM$\rightarrow$EXEC)}
+
+\subsubsection{Code 3}
+\begin{center}
+  \begin{tabularx}{\textwidth}{|C||C|C|C|C|C|C|C|}
+    \hline
+    Cycles & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+    \hline
+    and & FETCH & DECODE & EXEC & \tikzmarknode{a}{}  MEM & \tikzmarknode{c}{}  WB &  & \\
+    \hline
+    sub &  & FETCH & DECODE & \tikzmarknode{b}{}  EXEC & MEM & WB & \\
+    \hline
+    nor &  &  & FETCH & DECODE & \tikzmarknode{d}{}  EXEC & MEM & WB\\
+    \hline
+  \end{tabularx}
+  \begin{tikzpicture}[overlay, remember picture,
+                    shorten >=0pt, shorten <=0pt]
+  \draw [red, very thick, ->] (a) -- (b);
+  \draw [red, very thick, ->] (c) -- (d);
+  \end{tikzpicture}
+\end{center}
+\textit{Note: t2 is being forwarded both times (WB$\rightarrow$EXEC and MEM$\rightarrow$EXEC)}
+
+\subsubsection{Code 4}
+\begin{center}
+  \begin{tabularx}{\textwidth}{|C||C|C|C|C|C|C|C|}
+    \hline
+    Cycles & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+    \hline
+    lw & FETCH & DECODE & EXEC & MEM & \tikzmarknode{a}{}  WB & & \\
+    \hline
+    and &  & FETCH & - & DECODE & \tikzmarknode{b}{}  EXEC & MEM & WB \\
+    \hline
+  \end{tabularx}
+  \begin{tikzpicture}[overlay, remember picture,
+                    shorten >=0pt, shorten <=0pt]
+  \draw [red, very thick, ->] (a) -- (b);
+  \end{tikzpicture}
+\end{center}
+\textit{Note: t1 is being forwarded (WB$\rightarrow$EXEC)}
+
+\subsubsection{Code 5}
+\begin{center}
+  \begin{tabularx}{\textwidth}{|C||C|C|C|C|C|C|C|}
+    \hline
+    Cycles & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+    \hline
+    lw & FETCH & DECODE & EXEC & MEM & \tikzmarknode{a}{}  WB & & \\
+    \hline
+    sub &  & FETCH & DECODE & EXEC & MEM & WB & \\
+    \hline
+    xor &  & & FETCH & DECODE & \tikzmarknode{b}{}  EXEC & MEM & WB \\
+    \hline
+  \end{tabularx}
+  \begin{tikzpicture}[overlay, remember picture,
+                    shorten >=0pt, shorten <=0pt]
+  \draw [red, very thick, ->] (a) -- (b);
+  \end{tikzpicture}
+\end{center}
+\textit{Note: t1 is being forwarded (WB$\rightarrow$EXEC)}
+
+\end{document}
