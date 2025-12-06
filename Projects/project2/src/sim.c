@@ -167,8 +167,7 @@ int main(int argc, char *argv[])
     fclose(fp);
 
     // Print the misprediction rate
-    printf("GBP=%d, RB=%d\n", m, n);
-    printf("Misprediction Rate: %.2f%%\n", (double)mispredictions / total_branches * 100.0);
+    printf("%d %d %.2f\n", m, n, (double)mispredictions / total_branches);
 
     // Free the PHT
     free(pred.pht);
